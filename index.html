@@ -24,6 +24,8 @@ a{color:var(--pri)}
 .topo a.ativo{background:var(--chip);font-weight:700}
 main{flex:1 0 auto;width:100%;max-width:640px;margin:0 auto;padding:14px 14px 28px}
 .autoria{padding:4px 16px 22px;padding-bottom:max(22px,env(safe-area-inset-bottom));text-align:center;font-size:12px;letter-spacing:.02em;color:var(--suave);opacity:.8}
+.autoria .redes{margin-top:4px}
+.autoria .redes a{color:inherit;font-weight:600;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px}
 h1{font-size:22px;line-height:1.25;margin:4px 0 12px}
 h2{font-size:17px;margin:0 0 10px}
 p{margin:0 0 10px}
@@ -107,7 +109,12 @@ summary{cursor:pointer;color:var(--suave);font-weight:600;font-size:14px}
   <div class="cartao centro suave">Carregando…</div>
   <noscript><div class="cartao centro">Este app precisa do JavaScript ligado no navegador.</div></noscript>
 </main>
-<footer class="autoria">Autoria de Gabriel Marangoni</footer>
+<footer class="autoria">
+  <div>Autoria de Gabriel Marangoni</div>
+  <div class="redes">Siga <strong>@gabrielmgs7</strong> no
+    <a href="https://www.threads.com/@gabrielmgs7" target="_blank" rel="noopener" aria-label="@gabrielmgs7 no Threads">Threads</a> e
+    <a href="https://www.instagram.com/gabrielmgs7/" target="_blank" rel="noopener" aria-label="@gabrielmgs7 no Instagram">Instagram</a></div>
+</footer>
 <script src="app.js" defer></script>
 </body>
 </html>
