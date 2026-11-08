@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2563eb">
+<meta name="author" content="Gabriel Marangoni">
+<meta name="description" content="Organize publicações para várias contas do Threads, em levas agendadas por data.">
+<title>Painel de Publicações</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icone-192.png">
+<link rel="apple-touch-icon" href="icone-192.png">
+<style>
+:root{color-scheme:light dark;--fundo:#f3f5f9;--cartao:#fff;--texto:#1c2230;--suave:#667085;--borda:#e1e5ec;--pri:#2563eb;--pri-texto:#fff;--chip:#eef1f6;
+--verde:#15803d;--verde-fundo:#e6f6ec;--amarela:#a16207;--amarela-fundo:#fdf4dc;--azul:#1d4ed8;--azul-fundo:#e8efff;--erro:#c62828;--erro-fundo:#fdecec}
+@media (prefers-color-scheme:dark){:root{--fundo:#0f1218;--cartao:#171b23;--texto:#e7eaf0;--suave:#9aa3b5;--borda:#2a303c;--pri:#4f8bff;--chip:#232a37;
+--verde:#4ade80;--verde-fundo:#14281c;--amarela:#facc15;--amarela-fundo:#2b2510;--azul:#93b4ff;--azul-fundo:#1a2440;--erro:#f87171;--erro-fundo:#2d1616}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;background:var(--fundo);color:var(--texto);font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;-webkit-text-size-adjust:100%}
+a{color:var(--pri)}
+.topo{position:sticky;top:0;z-index:5;display:flex;gap:4px;padding:8px 10px;padding-top:max(8px,env(safe-area-inset-top));background:var(--cartao);border-bottom:1px solid var(--borda)}
+.topo a{flex:1;text-align:center;padding:9px 6px;border-radius:10px;color:var(--texto);text-decoration:none;font-size:15px;white-space:nowrap}
+.topo a.engrenagem{flex:0 0 auto;padding:9px 14px}
+.topo a.ativo{background:var(--chip);font-weight:700}
+main{flex:1 0 auto;width:100%;max-width:640px;margin:0 auto;padding:14px 14px 28px}
+.autoria{padding:4px 16px 22px;padding-bottom:max(22px,env(safe-area-inset-bottom));text-align:center;font-size:12px;letter-spacing:.02em;color:var(--suave);opacity:.8}
+h1{font-size:22px;line-height:1.25;margin:4px 0 12px}
+h2{font-size:17px;margin:0 0 10px}
+p{margin:0 0 10px}
+.cartao{display:block;background:var(--cartao);border:1px solid var(--borda);border-radius:14px;padding:16px;margin-bottom:14px;color:inherit;text-decoration:none}
+.destaque{border:2px solid var(--pri)}
+.suave{color:var(--suave);font-size:14px}
+.centro{text-align:center}
+.aviso{padding:11px 14px;border-radius:10px;margin-bottom:12px;font-weight:600;font-size:15px}
+.aviso.ok{background:var(--verde-fundo);color:var(--verde)}
+.aviso.erro{background:var(--erro-fundo);color:var(--erro)}
+.aviso.info{background:var(--chip);font-weight:500}
+label{display:block;font-weight:600;font-size:14px;color:var(--suave);margin:14px 0 6px}
+input[type=text],input[type=date],input[type=time],input[type=file],textarea{width:100%;padding:11px 12px;border:1px solid var(--borda);border-radius:10px;background:var(--fundo);color:var(--texto);font:inherit}
+input[type=file]{border-style:dashed;padding:14px 12px}
+textarea{min-height:140px;resize:vertical}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 16px;border:1px solid var(--borda);border-radius:10px;background:var(--cartao);color:var(--texto);font-family:inherit;font-size:15px;font-weight:600;line-height:1.2;text-decoration:none;cursor:pointer}
+.btn.pri{background:var(--pri);border-color:var(--pri);color:var(--pri-texto)}
+.btn.verde{background:var(--verde-fundo);border-color:transparent;color:var(--verde)}
+.btn.perigo{background:var(--erro-fundo);border-color:transparent;color:var(--erro)}
+.btn.largo{width:100%}
+.btn:disabled{opacity:.6;cursor:default}
+.acoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.acoes form{margin:0}
+.tag{display:inline-block;padding:3px 10px;border-radius:999px;background:var(--chip);font-size:13px;font-weight:600;white-space:nowrap}
+.tag.verde{background:var(--verde-fundo);color:var(--verde)}
+.tag.amarela{background:var(--amarela-fundo);color:var(--amarela)}
+.tag.azul{background:var(--azul-fundo);color:var(--azul)}
+.perfil{font-weight:700;color:var(--pri);text-decoration:none;word-break:break-all}
+.perfil-grande{font-size:22px;font-weight:700;color:var(--pri);word-break:break-all;margin-bottom:4px}
+.barra{height:8px;border-radius:99px;background:var(--chip);overflow:hidden;margin:10px 0 6px}
+.barra i{display:block;height:100%;background:var(--verde);border-radius:99px}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 10px;margin:0 -2px 4px}
+.chip{flex:none;padding:8px 12px;border-radius:999px;border:1px solid var(--borda);background:var(--cartao);color:var(--texto);text-decoration:none;font-size:14px;white-space:nowrap}
+.chip.sel{background:var(--pri);border-color:var(--pri);color:var(--pri-texto);font-weight:700}
+.par{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.par .meio{flex:1;min-width:0;text-align:center}
+.btn-ic{display:inline-flex;align-items:center;justify-content:center;flex:none;width:44px;height:44px;border-radius:12px;border:1px solid var(--borda);background:var(--cartao);color:var(--texto);text-decoration:none;font-size:16px;cursor:pointer}
+.btn-ic.vazio{visibility:hidden}
+.btn-ic.mini{width:34px;height:30px;font-size:12px;border-radius:8px}
+.btn-ic:disabled{opacity:.35;cursor:default}
+.voltar{display:inline-block;margin:0 0 10px;font-weight:600;font-size:14px;text-decoration:none}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:14px}
+.cal .sem{text-align:center;font-size:12px;font-weight:700;color:var(--suave);padding:2px 0}
+.cal .d{min-height:56px;padding:6px 2px;border-radius:10px;border:1px solid var(--borda);background:var(--fundo);color:var(--texto);text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:15px}
+.cal .d.fora{opacity:.4}
+.cal .d.hoje{border:2px solid var(--pri);font-weight:800}
+.pontos{display:inline-flex;flex-wrap:wrap;justify-content:center;gap:3px;max-width:34px;vertical-align:middle}
+.pontos i{width:7px;height:7px;border-radius:50%;background:var(--amarela)}
+.pontos i.ok{background:var(--verde)}
+.galeria{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.galeria figure{margin:0;border:1px solid var(--borda);border-radius:10px;overflow:hidden;background:var(--fundo)}
+.galeria img,.galeria video{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;background:#000}
+.galeria .sem-previa{display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;padding:8px;font-size:13px;color:var(--suave);text-align:center;word-break:break-all}
+.galeria figcaption{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:7px 8px;font-size:13px}
+.galeria figcaption label{display:flex;align-items:center;gap:4px;margin:0;font-weight:500}
+.contador{text-align:right;font-size:13px;color:var(--suave);margin-top:4px}
+.contador.excedeu{color:var(--erro);font-weight:700}
+.dica{font-size:13px;color:var(--suave);margin:10px 0 0}
+details{margin-top:12px}
+summary{cursor:pointer;color:var(--suave);font-weight:600;font-size:14px}
+.linha{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-top:1px solid var(--borda);color:inherit;text-decoration:none}
+.linha:first-of-type{border-top:0}
+.linha .txt{min-width:0}
+.trecho{display:block;color:var(--suave);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item{display:flex;gap:12px;padding:12px 0;border-top:1px solid var(--borda)}
+.item:first-of-type{border-top:0}
+.item .ordem{display:flex;flex-direction:column;gap:4px}
+.item .info{flex:1;min-width:0}
+.form-linha{display:flex;gap:8px;margin-top:8px}
+.form-linha input{flex:1;min-width:0}
+</style>
+</head>
+<body>
+<nav class="topo">
+  <a href="#/" data-menu="inicio">🏠 Início</a>
+  <a href="#/agenda" data-menu="agenda">📅 Agenda</a>
+  <a href="#/contas" data-menu="contas">👤 Contas</a>
+  <a href="#/ajustes" data-menu="ajustes" class="engrenagem" aria-label="Ajustes e backup">⚙️</a>
+</nav>
+<main>
+  <div class="cartao centro suave">Carregando…</div>
+  <noscript><div class="cartao centro">Este app precisa do JavaScript ligado no navegador.</div></noscript>
+</main>
+<footer class="autoria">Autoria de Gabriel Marangoni</footer>
+<script src="app.js" defer></script>
+</body>
+</html>
