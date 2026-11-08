@@ -96,6 +96,17 @@ summary{cursor:pointer;color:var(--suave);font-weight:600;font-size:14px}
 .item .info{flex:1;min-width:0}
 .form-linha{display:flex;gap:8px;margin-top:8px}
 .form-linha input{flex:1;min-width:0}
+.manual details{margin:0 0 10px;background:var(--cartao);border:1px solid var(--borda);border-radius:14px}
+.manual summary{display:flex;align-items:center;gap:12px;padding:14px 16px;list-style:none;color:var(--texto);font-size:16px;font-weight:700}
+.manual summary::-webkit-details-marker{display:none}
+.manual summary::after{content:"›";margin-left:auto;font-size:22px;line-height:1;color:var(--suave);transition:transform .15s}
+.manual details[open] summary::after{transform:rotate(90deg)}
+.manual .n{flex:none;display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--azul-fundo);color:var(--azul);font-size:14px}
+.manual .corpo{padding:0 16px 14px 56px;font-size:15px}
+.manual .corpo p{color:var(--suave)}
+.manual ol{margin:0;padding-left:18px}
+.manual li{margin:0 0 8px}
+@media (max-width:380px){.topo{gap:2px;padding-left:6px;padding-right:6px}.topo a{font-size:14px;padding:9px 3px}.topo a.engrenagem{padding:9px 8px}}
 </style>
 </head>
 <body>
@@ -103,6 +114,7 @@ summary{cursor:pointer;color:var(--suave);font-weight:600;font-size:14px}
   <a href="#/" data-menu="inicio">🏠 Início</a>
   <a href="#/agenda" data-menu="agenda">📅 Agenda</a>
   <a href="#/contas" data-menu="contas">👤 Contas</a>
+  <a href="#/ajuda" data-menu="ajuda" class="engrenagem" aria-label="Como usar">❓</a>
   <a href="#/ajustes" data-menu="ajustes" class="engrenagem" aria-label="Ajustes e backup">⚙️</a>
 </nav>
 <main>

@@ -7,7 +7,7 @@
  *
  * Ao publicar uma versão nova do app, aumente o número abaixo (v7, v8, ...).
  */
-const VERSAO = 'painel-v6';
+const VERSAO = 'painel-v7';
 const ARQUIVOS = [
   './', './index.html', './app.js', './manifest.webmanifest',
   './icone-192.png', './icone-512.png', './icone-mascara-512.png',

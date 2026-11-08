@@ -11,7 +11,7 @@
 // Configuração
 // =============================================================================
 const AUTORIA = 'Autoria de Gabriel Marangoni';
-const VERSAO_APP = '1.0';
+const VERSAO_APP = '1.1';
 const LIMITE_CARACTERES = 500;          // limite de texto de um post no Threads (o painel só avisa)
 const DIAS_PARA_LEMBRAR_BACKUP = 14;
 const ASSINATURA_BACKUP = 'painel-de-publicacoes-threads';
@@ -292,6 +292,7 @@ const ROTAS = [
   [/^#\/contas$/, paginaContas, 'contas'],
   [/^#\/conta\/(\w+)$/, paginaConta, 'contas'],
   [/^#\/ajustes$/, paginaAjustes, 'ajustes'],
+  [/^#\/ajuda$/, paginaAjuda, 'ajuda'],
 ];
 
 const avisos = [];
@@ -400,7 +401,8 @@ function paginaInicio() {
   if (!contas.length) {
     html += `<div class="cartao destaque"><h2>Comece cadastrando suas contas</h2>
       <p>Adicione os @ das contas do Threads que você gerencia. Cada leva terá uma publicação para cada conta.</p>
-      <a class="btn pri largo" href="#/contas">Cadastrar contas</a></div>`;
+      <a class="btn pri largo" href="#/contas">Cadastrar contas</a>
+      <p class="dica centro" style="margin-top:12px"><a href="#/ajuda">Primeira vez aqui? Veja o passo a passo</a></p></div>`;
   } else if (pendencia) {
     const l = pendencia.leva;
     html += `<div class="cartao destaque"><div class="suave">Continuar de onde parou</div>
@@ -702,6 +704,85 @@ function paginaAjustes() {
   </div>
   <div class="cartao"><h2>📦 Espaço usado</h2><p id="espaco" class="suave">Calculando…</p></div>
   <p class="centro suave">Painel de Publicações · versão ${VERSAO_APP}</p>`;
+}
+
+// ----------------------------------------------------------------- manual
+const MANUAL = [
+  {
+    titulo: 'Instale o app no celular',
+    passos: [
+      'Abra o link do painel no <strong>Chrome</strong>.',
+      'Toque em <strong>Instalar app</strong>, no Início, ou no menu <strong>⋮</strong> do Chrome → <strong>Instalar app</strong>.',
+      'O ícone <strong>Publicações</strong> aparece na tela inicial, e o painel passa a abrir mesmo sem internet.',
+    ],
+  },
+  {
+    titulo: 'Cadastre suas contas',
+    passos: [
+      'Toque em <strong>👤 Contas</strong>.',
+      'Escreva ou cole os @ das suas contas do Threads, um por linha. Pode ser com @, sem @ ou o link do perfil.',
+      'Toque em <strong>Adicionar</strong>.',
+      'A ordem da lista é a ordem da fila: use <strong>▲ ▼</strong> para mudar. Em <strong>Editar ou remover</strong>, você corrige um @ ou tira a conta da lista.',
+    ],
+  },
+  {
+    titulo: 'Crie uma leva',
+    intro: 'Uma leva é um lote com uma publicação para cada conta.',
+    passos: [
+      'Toque em <strong>📅 Agenda</strong> e escolha o dia (ou em <strong>Ver o dia de hoje</strong>, no Início).',
+      'Se quiser, dê um nome (ex.: Manhã) e um horário.',
+      'Toque em <strong>Criar Leva</strong>.',
+      'Pode criar várias levas no mesmo dia. Para mudar a data, abra a leva e toque em <strong>⚙️ Editar ou excluir esta leva</strong>.',
+    ],
+  },
+  {
+    titulo: 'Monte as publicações',
+    intro: 'No topo da leva fica o menu de contas: ⏳ falta criar · 📝 pronta · ✅ publicada.',
+    passos: [
+      'Escolha as fotos ou vídeos e escreva o texto. O contador avisa se passar de 500 caracteres.',
+      'Toque em <strong>Salvar e ir para a próxima</strong>: o painel já abre a próxima conta da fila.',
+      'Para ir a outra conta, toque no @ dela no menu ou use <strong>◀ ▶</strong>.',
+      'Para corrigir, abra a conta, mude o que quiser e toque em <strong>Salvar alterações</strong>. Marque <strong>Remover</strong> para tirar uma foto ou vídeo.',
+    ],
+  },
+  {
+    titulo: 'Publique no Threads',
+    passos: [
+      'Abra a leva e toque na conta que vai publicar.',
+      'Toque em <strong>📤 Compartilhar</strong> e escolha o <strong>Threads</strong>. As fotos e vídeos vão junto e o texto já fica copiado.',
+      'No Threads, confira se está na conta certa, cole o texto e publique.',
+      'Volte ao painel e toque em <strong>✅ Já publiquei no Threads</strong>: ele abre a próxima conta a publicar.',
+    ],
+    dica: 'Sem o botão Compartilhar? Use <strong>⬇️ Baixar</strong> nas fotos e <strong>📋 Copiar texto</strong>.',
+  },
+  {
+    titulo: 'Acompanhe o andamento',
+    passos: [
+      'O <strong>🏠 Início</strong> mostra a próxima conta que falta e as próximas levas.',
+      'Na <strong>📅 Agenda</strong>, ponto verde é leva completa e ponto amarelo é leva com conta faltando.',
+      'Em <strong>👤 Contas</strong>, toque num @ para ver o que falta e o que já está pronto para ele.',
+    ],
+  },
+  {
+    titulo: 'Faça backup',
+    intro: 'Tudo fica guardado só neste celular, dentro do app.',
+    passos: [
+      'Toque em <strong>⚙️</strong> → <strong>Baixar backup (.zip)</strong> e guarde o arquivo num lugar seguro, como o Google Drive.',
+      'Para recuperar ou passar para outro celular: <strong>⚙️</strong> → <strong>Restaurar backup</strong>.',
+      'Limpar os dados do Chrome ou desinstalar o app apaga as publicações. Faça backup antes.',
+    ],
+  },
+];
+
+function paginaAjuda() {
+  return `<h1>❓ Como usar</h1>
+  <p class="suave">O passo a passo do painel. Toque em uma etapa para ver os detalhes.</p>
+  <div class="manual">${MANUAL.map((etapa, i) => `<details name="manual">
+    <summary><span class="n">${i + 1}</span>${etapa.titulo}</summary>
+    <div class="corpo">${etapa.intro ? `<p>${etapa.intro}</p>` : ''}
+      <ol>${etapa.passos.map(p => `<li>${p}</li>`).join('')}</ol>
+      ${etapa.dica ? `<p class="dica">${etapa.dica}</p>` : ''}</div>
+  </details>`).join('')}</div>`;
 }
 
 async function mostrarEspaco(elemento) {
